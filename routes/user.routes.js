@@ -23,7 +23,7 @@ router.post(
       min: 6,
     }),
     check("name", "The name is required").not().isEmpty(),
-    check("role", "It is not a valid role").isIn(["ADMIN_ROLE", "USER_ROLE"]),
+    check("role", "Not valid role").isIn(["ADMIN_ROLE", "USER_ROLE"]),
   ],
   createUser
 );
