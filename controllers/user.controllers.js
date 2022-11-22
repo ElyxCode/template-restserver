@@ -36,10 +36,21 @@ const createUser = async (req = request, res = response) => {
   });
 };
 
-const updateUser = (req = request, res = response) => {
+const updateUser = async (req = request, res = response) => {
+  const { id } = req.params;
+  const { password, google, email, ...rest } = req.body;
+
+  if (password) {
+    // encrypt password
+    const salt = bcryptjs.genSaltSync();
+    rest.password = bcryptjs.hashSync(password, salt);
+  }
+
+  const user = await User.findByIdAndUpdate(id, rest);
+
   res.json({
     sucess: true,
-    msg: "api put",
+    data: user,
   });
 };
 
