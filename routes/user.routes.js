@@ -1,6 +1,8 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
+const Role = require("../models/role");
 
+const { validationFields } = require("../middlewares/validation-fields");
 const {
   getUsers,
   getUserById,
@@ -23,7 +25,14 @@ router.post(
       min: 6,
     }),
     check("name", "The name is required").not().isEmpty(),
-    check("role", "Not valid role").isIn(["ADMIN_ROLE", "USER_ROLE"]),
+    // custom validation if role exist in the database.
+    check("role").custom(async (role = "") => {
+      const existRole = await Role.findOne({ role });
+      if (!existRole) {
+        throw new Error(`The role ${role} is not registered in the database.`);
+      }
+    }),
+    validationFields,
   ],
   createUser
 );
