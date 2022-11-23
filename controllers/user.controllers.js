@@ -38,7 +38,7 @@ const createUser = async (req = request, res = response) => {
 
 const updateUser = async (req = request, res = response) => {
   const { id } = req.params;
-  const { password, google, email, ...rest } = req.body;
+  const { _id, password, google, email, ...rest } = req.body;
 
   if (password) {
     // encrypt password
@@ -46,7 +46,7 @@ const updateUser = async (req = request, res = response) => {
     rest.password = bcryptjs.hashSync(password, salt);
   }
 
-  const user = await User.findByIdAndUpdate(id, rest);
+  const user = await User.findByIdAndUpdate(id, rest, { new: true });
 
   res.json({
     sucess: true,
