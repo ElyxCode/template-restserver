@@ -21,7 +21,15 @@ const router = Router();
 router.get("/", getUsers);
 
 // get user by id
-router.get("/", getUserById);
+router.get(
+  "/:id",
+  [
+    check("id", "Not valid id").isMongoId(),
+    check("id").custom(existUserById),
+    validationFields,
+  ],
+  getUserById
+);
 
 // create user
 router.post(

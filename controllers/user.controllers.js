@@ -1,4 +1,4 @@
-// intelisense help with express request and response
+// intelisense help with express request and response options
 const { response, request } = require("express");
 
 const bcryptjs = require("bcryptjs");
@@ -11,7 +11,6 @@ const getUsers = async (req = request, res = response) => {
   const query = { status: true };
 
   // const users = await User.find(query).skip(Number(from)).limit(Number(limit));
-
   // const total = await User.countDocuments(query);
 
   const [users, total] = await Promise.all([
@@ -26,13 +25,18 @@ const getUsers = async (req = request, res = response) => {
   });
 };
 
-const getUserById = (req = request, res = response) => {
+// get user by id
+const getUserById = async (req = request, res = response) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+
   res.json({
     sucess: true,
-    msg: "api get only user",
+    data: user,
   });
 };
 
+// create user
 const createUser = async (req = request, res = response) => {
   const { name, email, password, role } = req.body;
 
@@ -50,6 +54,7 @@ const createUser = async (req = request, res = response) => {
   });
 };
 
+// update user
 const updateUser = async (req = request, res = response) => {
   const { id } = req.params;
   const { _id, password, google, email, ...rest } = req.body;
@@ -68,6 +73,7 @@ const updateUser = async (req = request, res = response) => {
   });
 };
 
+// delete user
 const deleteUser = (req = request, res = response) => {
   res.json({
     sucess: true,
