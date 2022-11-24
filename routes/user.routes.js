@@ -62,6 +62,14 @@ router.put(
 );
 
 // delele user
-router.delete("/", deleteUser);
+router.delete(
+  "/:id",
+  [
+    check("id", "Not valid id").isMongoId(),
+    check("id").custom(existUserById),
+    validationFields,
+  ],
+  deleteUser
+);
 
 module.exports = router;

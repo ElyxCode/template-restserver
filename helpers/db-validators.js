@@ -20,6 +20,11 @@ const existUserById = async (id) => {
   if (!existUser) {
     throw new Error(`the id ${id} does not exist`);
   }
+
+  // if user exist but your status is false (user disabled)
+  if (existUser.status === false) {
+    throw new Error("The user was disabled");
+  }
 };
 
 module.exports = {

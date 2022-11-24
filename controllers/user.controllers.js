@@ -65,7 +65,11 @@ const updateUser = async (req = request, res = response) => {
     rest.password = bcryptjs.hashSync(password, salt);
   }
 
-  const user = await User.findByIdAndUpdate(id, rest, { new: true });
+  const user = await User.findByIdAndUpdate(
+    id,
+    rest,
+    { new: true } // return data update
+  );
 
   res.json({
     sucess: true,
@@ -74,10 +78,22 @@ const updateUser = async (req = request, res = response) => {
 };
 
 // delete user
-const deleteUser = (req = request, res = response) => {
+const deleteUser = async (req = request, res = response) => {
+  const { id } = req.params;
+
+  // delete database
+  //const user = await User.findByIdAndDelete(id);
+
+  // update data, no show in get (user disabled)
+  const user = await User.findByIdAndUpdate(
+    id,
+    { status: false },
+    { new: true } // return data updated
+  );
+
   res.json({
     sucess: true,
-    msg: "api delete",
+    msg: "user disabled",
   });
 };
 
