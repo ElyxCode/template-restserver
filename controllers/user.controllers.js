@@ -93,6 +93,7 @@ const deleteUser = async (req = request, res = response) => {
 
   res.json({
     sucess: true,
+    user,
     msg: "user disabled",
   });
 };
