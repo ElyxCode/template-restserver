@@ -39,7 +39,7 @@ const getCategoriesById = async (req = request, res = response) => {
 };
 
 // create category
-const createCategory = async (req = request, res = response) => {
+const createCategories = async (req = request, res = response) => {
   const name = req.body.name.toUpperCase();
   const categoryDB = await Categories.findOne({ name });
 
@@ -76,11 +76,35 @@ const createCategory = async (req = request, res = response) => {
 };
 
 // update category
+const updateCategories = async (req = request, res = response) => {
+  const { id } = req.params;
+  const newCategoryName = req.body.name.toUpperCase();
+
+  try {
+    const category = await Categories.findByIdAndUpdate(
+      id,
+      { name: newCategoryName },
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      data: category,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      msg: "The operation was not completed - check log",
+    });
+  }
+};
 
 // delete category - change status to false
 
 module.exports = {
-  createCategory,
+  createCategories,
   getCategories,
   getCategoriesById,
+  updateCategories,
 };

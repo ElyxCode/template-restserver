@@ -2,9 +2,10 @@ const { Router } = require("express");
 const { check } = require("express-validator");
 
 const {
-  createCategory,
+  createCategories,
   getCategories,
   getCategoriesById,
+  updateCategories,
 } = require("../controllers/categories.controllers");
 
 const { validJWT, validationFields } = require("../middlewares");
@@ -35,15 +36,20 @@ router.post(
     check("name", "The name is required").not().isEmpty(),
     validationFields,
   ],
-  createCategory
+  createCategories
 );
 
 // update categories - private - only valid token
-router.put("/:id", check("id").custom(existCategories), (req, res) => {
-  res.json({
-    msg: "update categories",
-  });
-});
+router.put(
+  "/:id",
+  [
+    check("id", "Not valid id").isMongoId(),
+    check("id").custom(existCategories),
+    check("name", "The name is required").not().isEmpty(),
+    validationFields,
+  ],
+  updateCategories
+);
 
 // delete categories - only admin
 router.delete("/:id", check("id").custom(existCategories), (req, res) => {
