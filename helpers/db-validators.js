@@ -24,7 +24,7 @@ const existUserById = async (id) => {
 
   // if user exist but your status is false (user disabled)
   if (existUser.status === false) {
-    throw new Error("The user was disabled");
+    throw new Error("The user is already deleted");
   }
 };
 
@@ -37,7 +37,7 @@ const existCategories = async (id) => {
 
   // if category exist but your status is false (category disabled)
   if (existCategory.status === false) {
-    throw new Error("The category was disable");
+    throw new Error("The category is already deleted");
   }
 };
 
