@@ -1,40 +1,54 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
 
-const { validationFields } = require("../middlewares/validation-fields");
+const {
+  createCategory,
+  getCategories,
+} = require("../controllers/categories.controllers");
+
+const { validJWT, validationFields } = require("../middlewares");
+
+const { existCategories } = require("../helpers/db-validators");
 
 const router = Router();
 
 // get categories - public
-router.get("/", (req, res) => {
-  res.json({
-    msg: "get",
-  });
-});
+router.get("/", getCategories);
 
 // get categories by id - public
-router.get("/:id", (req, res) => {
-  res.json({
-    msg: "get - id",
-  });
-});
+router.get(
+  "/:id",
+  [
+    check("id", "Not valid id").isMongoId(),
+    check("id").custom(existCategories),
+  ],
+  (req, res) => {
+    res.json({
+      msg: "get - id",
+    });
+  }
+);
 
 // create categories - private - only valid token
-router.post("/", (req, res) => {
-  res.json({
-    msg: "create categories",
-  });
-});
+router.post(
+  "/",
+  [
+    validJWT,
+    check("name", "The name is required").not().isEmpty(),
+    validationFields,
+  ],
+  createCategory
+);
 
 // update categories - private - only valid token
-router.put("/:id", (req, res) => {
+router.put("/:id", check("id").custom(existCategories), (req, res) => {
   res.json({
     msg: "update categories",
   });
 });
 
 // delete categories - only admin
-router.delete("/:id", (req, res) => {
+router.delete("/:id", check("id").custom(existCategories), (req, res) => {
   res.json({
     msg: "delete categories",
   });
