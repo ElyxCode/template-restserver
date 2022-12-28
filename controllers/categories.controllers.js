@@ -8,7 +8,10 @@ const getCategories = async (req = request, res = response) => {
 
   try {
     const [categories, total] = await Promise.all([
-      Categories.find(queryCategory).skip(Number(from)).limit(Number(limit)),
+      Categories.find(queryCategory)
+        .skip(Number(from))
+        .limit(Number(limit))
+        .populate("user"),
       Categories.countDocuments(queryCategory),
     ]);
 
@@ -30,7 +33,7 @@ const getCategories = async (req = request, res = response) => {
 const getCategoriesById = async (req = request, res = response) => {
   const { id } = req.params;
 
-  const category = await Categories.findById(id);
+  const category = await Categories.findById(id).populate("user");
 
   res.json({
     success: true,
@@ -54,7 +57,7 @@ const createCategories = async (req = request, res = response) => {
   // generate data to save
   const categoryData = {
     name,
-    user: req.user.uid,
+    user: req.user._id,
   };
 
   try {
