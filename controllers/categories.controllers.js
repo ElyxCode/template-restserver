@@ -27,6 +27,16 @@ const getCategories = async (req = request, res = response) => {
 };
 
 // get category by id
+const getCategoriesById = async (req = request, res = response) => {
+  const { id } = req.params;
+
+  const category = await Categories.findById(id);
+
+  res.json({
+    success: true,
+    data: category,
+  });
+};
 
 // create category
 const createCategory = async (req = request, res = response) => {
@@ -72,4 +82,5 @@ const createCategory = async (req = request, res = response) => {
 module.exports = {
   createCategory,
   getCategories,
+  getCategoriesById,
 };

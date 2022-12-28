@@ -4,6 +4,7 @@ const { check } = require("express-validator");
 const {
   createCategory,
   getCategories,
+  getCategoriesById,
 } = require("../controllers/categories.controllers");
 
 const { validJWT, validationFields } = require("../middlewares");
@@ -21,12 +22,9 @@ router.get(
   [
     check("id", "Not valid id").isMongoId(),
     check("id").custom(existCategories),
+    validationFields,
   ],
-  (req, res) => {
-    res.json({
-      msg: "get - id",
-    });
-  }
+  getCategoriesById
 );
 
 // create categories - private - only valid token
