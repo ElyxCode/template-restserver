@@ -6,6 +6,7 @@ const {
   getCategories,
   getCategoriesById,
   updateCategories,
+  deleteCategories,
 } = require("../controllers/categories.controllers");
 
 const { validJWT, validationFields } = require("../middlewares");
@@ -52,10 +53,14 @@ router.put(
 );
 
 // delete categories - only admin
-router.delete("/:id", check("id").custom(existCategories), (req, res) => {
-  res.json({
-    msg: "delete categories",
-  });
-});
+router.delete(
+  "/:id",
+  [
+    check("id", "Not valid id").isMongoId(),
+    check("id").custom(existCategories),
+    validationFields,
+  ],
+  deleteCategories
+);
 
 module.exports = router;

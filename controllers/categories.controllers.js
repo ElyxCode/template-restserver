@@ -101,10 +101,36 @@ const updateCategories = async (req = request, res = response) => {
 };
 
 // delete category - change status to false
+const deleteCategories = async (req = request, res = response) => {
+  const { id } = req.params;
+
+  // delete category from db
+  //const category = await Categories.findByIdAndDelete(id);
+
+  try {
+    // update status category to false (disable)
+    const category = await Categories.findByIdAndUpdate(
+      id,
+      { status: false },
+      { new: true }
+    );
+    res.json({
+      success: true,
+      msg: "The category was deleted",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      msg: "The operation was not completed - check log",
+    });
+  }
+};
 
 module.exports = {
   createCategories,
   getCategories,
   getCategoriesById,
   updateCategories,
+  deleteCategories,
 };
