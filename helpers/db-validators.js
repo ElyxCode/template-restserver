@@ -1,3 +1,4 @@
+const { Categories } = require("../models");
 const Role = require("../models/role");
 const User = require("../models/user");
 
@@ -27,8 +28,22 @@ const existUserById = async (id) => {
   }
 };
 
+const existCategories = async (id) => {
+  const existCategory = await Categories.findById(id);
+
+  if (!existCategory) {
+    throw new Error(`the category ${id} does not exist`);
+  }
+
+  // if category exist but your status is false (category disabled)
+  if (existCategory.status === false) {
+    throw new Error("The category was disable");
+  }
+};
+
 module.exports = {
   isValidRole,
   existEmail,
   existUserById,
+  existCategories,
 };
