@@ -30,6 +30,24 @@ const getProducts = async (req = request, res = response) => {
 };
 
 // get products by id
+const getProductsById = async (req = request, res = response) => {
+  const { id } = req.params;
+
+  try {
+    const product = await Product.findById(id).populate(["user", "category"]);
+
+    res.json({
+      success: true,
+      data: product,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      msg: "The operation is not completed - check log",
+    });
+  }
+};
 
 // create product
 const createProducts = async (req = request, res = response) => {
@@ -70,5 +88,6 @@ const createProducts = async (req = request, res = response) => {
 
 module.exports = {
   getProducts,
+  getProductsById,
   createProducts,
 };
