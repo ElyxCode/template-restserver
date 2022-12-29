@@ -81,14 +81,16 @@ const createCategories = async (req = request, res = response) => {
 // update category
 const updateCategories = async (req = request, res = response) => {
   const { id } = req.params;
-  const newCategoryName = req.body.name.toUpperCase();
+  const { status, user, ...data } = req.body;
+
+  data.name = data.name.toUpperCase();
+  data.user = req.user._id;
+  // const newCategoryName = req.body.name.toUpperCase();
 
   try {
-    const category = await Categories.findByIdAndUpdate(
-      id,
-      { name: newCategoryName },
-      { new: true }
-    );
+    const category = await Categories.findByIdAndUpdate(id, data, {
+      new: true,
+    });
 
     res.json({
       success: true,
