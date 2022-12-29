@@ -6,9 +6,10 @@ const {
   getProductsById,
   getProducts,
   updateProducts,
+  deleteProducts,
 } = require("../controllers/products.controllers");
 const { existCategories, existProducts } = require("../helpers/db-validators");
-const { validJWT, validationFields } = require("../middlewares");
+const { validJWT, validationFields, isAdminRole } = require("../middlewares");
 
 const router = Router();
 
@@ -53,5 +54,16 @@ router.put(
 );
 
 // delete products
+router.delete(
+  "/:id",
+  [
+    validJWT,
+    isAdminRole,
+    check("id", "Not valid id").isMongoId(),
+    check("id").custom(existProducts),
+    validationFields,
+  ],
+  deleteProducts
+);
 
 module.exports = router;

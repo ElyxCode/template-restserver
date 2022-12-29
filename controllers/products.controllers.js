@@ -111,9 +111,34 @@ const updateProducts = async (req = request, res = response) => {
   }
 };
 
+const deleteProducts = async (req = request, res = response) => {
+  const { id } = req.params;
+
+  try {
+    // const deleteProduct = await Product.findByIdAndDelete(id);
+    const deleteProduct = await Product.findByIdAndUpdate(
+      id,
+      { status: false },
+      { new: true }
+    );
+
+    res.json({
+      success: true,
+      msg: "The product was deleted",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      msg: "The process was not completed - check log",
+    });
+  }
+};
+
 module.exports = {
   getProducts,
   getProductsById,
   createProducts,
   updateProducts,
+  deleteProducts,
 };
