@@ -1,16 +1,17 @@
 const { Router } = require("express");
 
 const { check } = require("express-validator");
-const { createProducts } = require("../controllers/products.controllers");
 const {
-  existCategoriesByName,
-  existCategories,
-} = require("../helpers/db-validators");
+  createProducts,
+  getProducts,
+} = require("../controllers/products.controllers");
+const { existCategories } = require("../helpers/db-validators");
 const { validJWT, validationFields } = require("../middlewares");
 
 const router = Router();
 
 // get products
+router.get("/", getProducts);
 
 // get products by id
 
