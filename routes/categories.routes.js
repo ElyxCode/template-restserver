@@ -9,7 +9,7 @@ const {
   deleteCategories,
 } = require("../controllers/categories.controllers");
 
-const { validJWT, validationFields } = require("../middlewares");
+const { validJWT, validationFields, isAdminRole } = require("../middlewares");
 
 const { existCategories } = require("../helpers/db-validators");
 
@@ -44,6 +44,7 @@ router.post(
 router.put(
   "/:id",
   [
+    validJWT,
     check("id", "Not valid id").isMongoId(),
     check("id").custom(existCategories),
     check("name", "The name is required").not().isEmpty(),
@@ -56,6 +57,8 @@ router.put(
 router.delete(
   "/:id",
   [
+    validJWT,
+    isAdminRole,
     check("id", "Not valid id").isMongoId(),
     check("id").custom(existCategories),
     validationFields,
