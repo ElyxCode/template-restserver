@@ -5,6 +5,7 @@ const {
   createProducts,
   getProductsById,
   getProducts,
+  updateProducts,
 } = require("../controllers/products.controllers");
 const { existCategories, existProducts } = require("../helpers/db-validators");
 const { validJWT, validationFields } = require("../middlewares");
@@ -37,7 +38,19 @@ router.post(
   ],
   createProducts
 );
+
 // update products
+router.put(
+  "/:id",
+  [
+    validJWT,
+    check("id", "Not valid id").isMongoId(),
+    check("id").custom(existProducts),
+    check("name", "The name is required").not().isEmpty(),
+    validationFields,
+  ],
+  updateProducts
+);
 
 // delete products
 

@@ -86,8 +86,34 @@ const createProducts = async (req = request, res = response) => {
   }
 };
 
+// update product
+const updateProducts = async (req = request, res = response) => {
+  const { id } = req.params;
+
+  const { status, user, ...data } = req.body;
+  data.user = req.user._id;
+
+  try {
+    const updateProduct = await Product.findByIdAndUpdate(id, data, {
+      new: true,
+    }).populate(["user", "category"]);
+
+    res.json({
+      success: true,
+      data: updateProduct,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      msg: "The process was not completed - check log",
+    });
+  }
+};
+
 module.exports = {
   getProducts,
   getProductsById,
   createProducts,
+  updateProducts,
 };
