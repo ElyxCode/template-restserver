@@ -11,7 +11,8 @@ const getProducts = async (req = request, res = response) => {
       Product.find(query)
         .skip(from)
         .limit(limit)
-        .populate(["user", "category"]),
+        .populate("user", "name")
+        .populate("category", "name"),
       Product.countDocuments(query),
     ]);
 
@@ -34,7 +35,9 @@ const getProductsById = async (req = request, res = response) => {
   const { id } = req.params;
 
   try {
-    const product = await Product.findById(id).populate(["user", "category"]);
+    const product = await Product.findById(id)
+      .populate("user", "name")
+      .populate("category", "name");
 
     res.json({
       success: true,
@@ -51,29 +54,28 @@ const getProductsById = async (req = request, res = response) => {
 
 // create product
 const createProducts = async (req = request, res = response) => {
-  const { name, user, category, ...data } = req.body;
+  const { status, user, ...data } = req.body;
 
-  const existProduct = await Product.findOne({ name });
+  const existProduct = await Product.findOne({ name: data.name });
 
   if (existProduct) {
     return res.status(400).json({
       success: false,
-      msg: "The product already exist",
+      msg: `The product ${existProduct.name} already exist`,
     });
   }
 
   const newProduct = {
-    name,
+    ...data,
+    name: data.name.toUpperCase(),
     user: req.user._id,
-    category,
-    data,
   };
 
   try {
     const product = new Product(newProduct);
     await product.save();
 
-    res.json({
+    res.status(201).json({
       success: true,
       data: product,
     });
@@ -91,6 +93,11 @@ const updateProducts = async (req = request, res = response) => {
   const { id } = req.params;
 
   const { status, user, ...data } = req.body;
+
+  if (data.name) {
+    data.name = data.name.toUpperCase();
+  }
+
   data.user = req.user._id;
 
   try {
@@ -111,6 +118,7 @@ const updateProducts = async (req = request, res = response) => {
   }
 };
 
+// delete product
 const deleteProducts = async (req = request, res = response) => {
   const { id } = req.params;
 

@@ -47,7 +47,6 @@ router.put(
     validJWT,
     check("id", "Not valid id").isMongoId(),
     check("id").custom(existProducts),
-    check("name", "The name is required").not().isEmpty(),
     validationFields,
   ],
   updateProducts
