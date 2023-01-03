@@ -11,7 +11,7 @@ const getCategories = async (req = request, res = response) => {
       Categories.find(queryCategory)
         .skip(Number(from))
         .limit(Number(limit))
-        .populate("user"),
+        .populate("user", "name"),
       Categories.countDocuments(queryCategory),
     ]);
 
@@ -33,7 +33,7 @@ const getCategories = async (req = request, res = response) => {
 const getCategoriesById = async (req = request, res = response) => {
   const { id } = req.params;
 
-  const category = await Categories.findById(id).populate("user");
+  const category = await Categories.findById(id).populate("user", "name");
 
   res.json({
     success: true,
